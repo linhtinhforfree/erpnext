@@ -4,7 +4,7 @@
 
 # This image is also based on frappe/bench which we use for production
 # https://github.com/pipech/erpnext-docker-debian/blob/master/Dockerfile
-FROM pipech/erpnext-docker-debian:version-15-latest AS builder
+FROM ghcr.io/linhtinhforfree/erpnext:latest AS builder
 
 # These variable has been set from base image
 # $systemUser, $benchFolderName
