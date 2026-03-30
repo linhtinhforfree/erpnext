@@ -17,8 +17,10 @@ RUN echo "-> Start builder" \
     ### [HOTFIX] Railway used IPv6 (Does not support IPv4),  https://docs.railway.com/guides/private-networking#caveats
     ### https://github.com/frappe/frappe/issues/33981
     && sed -i 's/socket\.AF_INET, socket\.SOCK_STREAM/socket.AF_INET6, socket.SOCK_STREAM/g' /home/frappe/bench/apps/frappe/frappe/utils/connections.py \
-    ### install your custom apps here
-    # && bench get-app https://github.com/your-repo/custom_app
+    ### Install payments app (required for v14 backup restore)
+    && bench get-app payments --branch version-15 \
+    ### Install HRMS app (required for v14 backup restore)
+    && bench get-app hrms --branch version-15 \
     && echo "-> Builder done!"
 
 
@@ -63,7 +65,7 @@ RUN echo "-> Install nginx & supervisor" \
     && rm -rf /var/lib/apt/lists/* \
     && echo "-> Remove nginx default site" \
     && rm /etc/nginx/sites-enabled/default \
-    && echo "-> Rebuilding bench" \
+    && echo "-> Rebuilding bench (includes payments + hrms assets)" \
     && su $systemUser -c "bench build" \
     && su $systemUser -c "cp -r /home/$systemUser/$benchFolderName/sites /home/$systemUser/$benchFolderName/built_sites"
 
